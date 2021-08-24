@@ -1,0 +1,98 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getVerticalGeomtry() {
+        return {};
+      }
+
+      function getRoadGeometry() {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        let innerOuterIntersectionAngle = (1 / 3) * Math.PI;
+        let outRaduis = height * 0.4;
+        let laneWidth = outRaduis * 0.3;
+        let laneRadius = outRaduis - laneWidth / 2;
+
+        let totalLength = 2 * laneRadius * (1 + Math.sqrt(2) / 2);
+        let sideGap = (width - totalLength) / 2;
+
+        let geometryOne = {
+          centerX: sideGap + laneRadius,
+          centerY: height / 2,
+          innerRadius: outRaduis - laneWidth,
+          outerRadius: outRaduis,
+          midRaduis: laneRadius,
+          width: laneWidth,
+        };
+
+        let geometryTwo = {
+          centerX: width - sideGap - laneRadius,
+          centerY: height / 2,
+          innerRadius: outRaduis - laneWidth,
+          outerRadius: outRaduis,
+          midRaduis: laneRadius,
+          width: laneWidth,
+        };
+
+        return [geometryOne, geometryTwo];
+      }
+
+      function drawCirle(ctx, circle) {
+        let radiusArray = ["innerRadius", "outerRadius", "midRaduis"];
+        radiusArray.forEach((radiusType) => {
+          ctx.beginPath();
+          ctx.arc(
+            circle.centerX,
+            circle.centerY,
+            circle[radiusType],
+            0,
+            2 * Math.PI
+          );
+          ctx.stroke();
+        });
+      }
+
+      function drawRoad(circles) {
+        var canvas = document.querySelector("canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var ctx = canvas.getContext("2d");
+
+        circles.forEach((circle) => {
+          drawCirle(ctx, circle);
+          // ctx.arc(200, 200, 100, 0, 2 * Math.PI);
+        });
+
+        // ctx.beginPath();
+        // ctx.arc(100, 100, 50, Math.PI, 2 * Math.PI);
+        // ctx.stroke();
+        // document.body.appendChild(canvas);
+      }
+
+      function startDrawing() {
+        let geometries = getRoadGeometry();
+        drawRoad(geometries);
+      }
+
+      window.addEventListener("resize", function () {
+        console.log("resize");
+        startDrawing();
+      });
+
+      startDrawing();
+    </script>
+  </body>
+</html>
